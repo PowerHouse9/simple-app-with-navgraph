@@ -5,7 +5,7 @@ package com.stockbit.remote
  */
 class ExampleDatasource(private val exampleService: ExampleService) {
 
-    fun fetchTopUsersAsync() =
-            exampleService.fetchExampleAsync()
+//    fun fetchTopUsersAsync() =
+//            exampleService.fetchExampleAsync()
 
 }

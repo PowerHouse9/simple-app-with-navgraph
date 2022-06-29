@@ -28,6 +28,6 @@ class MainActivity : AppCompatActivity() {
     private fun configureNavController() {
         navController = findNavController(com.stockbit.hiring.R.id.nav_host_fragment)
         appBarConfiguration = AppBarConfiguration(navController.graph)
-        setupActionBarWithNavController(navController, appBarConfiguration)
+//        setupActionBarWithNavController(navController, appBarConfiguration)
     }
 }

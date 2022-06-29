@@ -4,8 +4,13 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/AndroidStudioProjects/Stockbit Test Project/Stockbit Test/app/src/main/res/layout/activity_main.xml" value="0.34479166666666666" />
+        <entry key="..\:/AndroidStudioProjects/Stockbit Test Project/Stockbit Test/app/src/main/res/layout/item_coin_list.xml" value="0.34375" />
         <entry key="..\:/AndroidStudioProjects/Stockbit Test Project/Stockbit Test/navigation/src/main/res/drawable/border_button.xml" value="0.256" />
+        <entry key="..\:/AndroidStudioProjects/Stockbit Test Project/Stockbit Test/navigation/src/main/res/drawable/ic_outline_file_24.xml" value="0.1825" />
         <entry key="..\:/AndroidStudioProjects/Stockbit Test Project/Stockbit Test/navigation/src/main/res/layout/fragment_login.xml" value="0.34479166666666666" />
+        <entry key="..\:/AndroidStudioProjects/Stockbit Test Project/Stockbit Test/navigation/src/main/res/layout/fragment_watchlist.xml" value="0.33" />
+        <entry key="..\:/AndroidStudioProjects/Stockbit Test Project/Stockbit Test/navigation/src/main/res/layout/item_coin_list.xml" value="0.34479166666666666" />
+        <entry key="..\:/AndroidStudioProjects/Stockbit Test Project/Stockbit Test/navigation/src/main/res/menu/bottom_menu.xml" value="0.34479166666666666" />
       </map>
     </option>
   </component>

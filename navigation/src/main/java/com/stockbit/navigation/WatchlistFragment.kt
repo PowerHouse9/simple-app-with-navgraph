@@ -1,59 +1,93 @@
 package com.stockbit.navigation
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
+import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.stockbit.model.ListDataCoins
+import com.stockbit.navigation.adapter.CoinListAdapter
+import com.stockbit.remote.ExampleService
+import com.stockbit.remote.di.ApiClient
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_watchlist.*
+import kotlinx.android.synthetic.main.fragment_watchlist.view.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [WatchlistFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class WatchlistFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private var mAdapter: CoinListAdapter? = null
+    private var listCoin : MutableList<ListDataCoins>? = ArrayList()
+
+    private var progressBar : ProgressBar? = null
+    private var swipeRefreshLayout : SwipeRefreshLayout? = null
+    private  var cons_noConnection : ConstraintLayout? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_watchlist, container, false)
+        val view = inflater.inflate(R.layout.fragment_watchlist, container, false)
+
+        progressBar = view.findViewById(R.id.progressBar)
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout)
+        cons_noConnection = view.findViewById(R.id.cons_noConnection)
+
+        view.recyclerList!!.layoutManager = LinearLayoutManager(context)
+
+        mAdapter =
+            this?.let { CoinListAdapter(context!!, listCoin!!) }
+        view.recyclerList.adapter = mAdapter
+
+        //swipe refresh
+        swipeRefreshLayout?.setOnRefreshListener {
+            getLoadData()
+        }
+
+        getLoadData()
+
+        return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment WatchlistFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            WatchlistFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    //get riwayat nanti buat api baru
+    private fun getLoadData(){
+        progressBar?.visibility = View.VISIBLE
+        swipeRefreshLayout?.isRefreshing = false
+        cons_noConnection?.visibility = View.GONE
+        var apiService: ExampleService = ApiClient.ApiClientStockbit.getClient().create(ExampleService::class.java)
+        apiService.loadData(10,"USD")
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { users ->
+                    progressBar?.visibility = View.GONE
+                    listCoin?.clear()
+                    if (users?.Type == 100){
+                        if (users?.Data.isNullOrEmpty()){
+                            Toast.makeText(context,"Data Kosong", Toast.LENGTH_SHORT).show()
+                            mAdapter?.notifyDataSetChanged()
+                        }else{
+                            users.Data?.let { listCoin?.addAll(it) }
+                            mAdapter?.notifyDataSetChanged()
+                        }
+                    } else {
+                        Toast.makeText(context, users.Message.toString(), Toast.LENGTH_SHORT).show()
+                        cons_noConnection?.visibility = View.VISIBLE
+                    }
+                }, { error ->
+                    swipeRefreshLayout?.isRefreshing = false
+                    progressBar?.visibility = View.GONE
+                    cons_noConnection?.visibility = View.VISIBLE
+                    Log.e("error", error.toString())
                 }
-            }
+            )
     }
+
 }

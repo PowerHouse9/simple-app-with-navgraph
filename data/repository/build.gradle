@@ -11,6 +11,8 @@ dependencies {
     implementation KotlinLibraries.kotlinCoroutineCore
     implementation AndroidLibraries.kotlinCoroutineAndroid
     implementation AndroidLibraries.lifecycleExtensions
+    //Retrofit
+    implementation Libraries.retrofit
     // KOIN
     implementation Libraries.koin
     implementation Libraries.koinViewModel
